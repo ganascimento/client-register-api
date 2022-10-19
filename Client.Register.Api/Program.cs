@@ -3,6 +3,17 @@ using Client.Register.CrossCutting.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(config =>
+{
+    config.AddPolicy("CorsPolicy", option =>
+    {
+        option
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(_ => true)
+            .AllowCredentials();
+    });
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -18,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

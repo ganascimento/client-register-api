@@ -12,4 +12,5 @@ public class CustomerDto
     public string? PostalCode { get; set; }
     public string? City { get; set; }
     public string? Uf { get; set; }
+    public string? Number { get; set; }
 }

@@ -11,5 +11,6 @@ public class CustumerMapping : Profile
         CreateMap<CustomerDto, CustomerEntity>().ReverseMap();
         CreateMap<CustomerDtoCreate, CustomerEntity>().ReverseMap();
         CreateMap<CustomerDtoUpdate, CustomerEntity>().ReverseMap();
+        CreateMap<CustumerDtoGetAll, CustomerEntity>().ReverseMap();
     }
 }

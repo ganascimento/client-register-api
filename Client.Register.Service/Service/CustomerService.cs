@@ -17,14 +17,21 @@ public class CustomerService : ICustomerService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<CustomerDto>> GetAllAsync()
+    public async Task<CustomerDto> GetByIdAsync(int id)
+    {
+        var customer = await _customerRepository.SelectAsync(id);
+        return _mapper.Map<CustomerDto>(customer);
+    }
+
+    public async Task<IEnumerable<CustumerDtoGetAll>> GetAllAsync()
     {
         var customers = await _customerRepository.SelectAsync();
-        return customers.Select(customer => _mapper.Map<CustomerDto>(customer));
+        return customers.Select(customer => _mapper.Map<CustumerDtoGetAll>(customer));
     }
 
     public async Task<CustomerDto> CreateAsync(CustomerDtoCreate dto)
     {
+        await CpfExists(dto.Cpf!);
         var customer = _mapper.Map<CustomerEntity>(dto);
         customer = await _customerRepository.InsertAsync(customer);
 
@@ -33,6 +40,9 @@ public class CustomerService : ICustomerService
 
     public async Task<CustomerDto> UpdateAsync(CustomerDtoUpdate dto)
     {
+        var oldCustomer = await _customerRepository.SelectAsync(dto.Id);
+        if (oldCustomer != null && oldCustomer.Cpf != dto.Cpf)
+            await CpfExists(dto.Cpf!);
         var customer = _mapper.Map<CustomerEntity>(dto);
         customer = await _customerRepository.UpdateAsync(customer);
 
@@ -43,5 +53,13 @@ public class CustomerService : ICustomerService
     {
         await _customerRepository.DeleteAsync(id);
         return true;
+    }
+
+    private async Task CpfExists(string cpf)
+    {
+        if (await _customerRepository.CpfExists(cpf))
+        {
+            throw new Exception("CPF já existe");
+        }
     }
 }
