@@ -1,4 +1,7 @@
-# API Cadastro de Cliente
+# API Customer Registration
 
-Para criar o banco de dados execute:
+## About
+simple api to curstomer register using .NET 6 and EF Core
+
+To create the database run:
 dotnet ef database update
